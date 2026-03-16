@@ -89,7 +89,11 @@ func realMain() int {
 	if tmpLogPath != "" {
 		f, err := os.OpenFile(tmpLogPath, os.O_RDWR|os.O_APPEND, 0666)
 		if err == nil {
-			defer f.Close()
+			defer func() {
+				if err := f.Close(); err != nil {
+					log.Printf("[ERROR] Failed to close temp log file %s: %v", f.Name(), err)
+				}
+			}()
 
 			log.Printf("[DEBUG] Adding temp file log sink: %s", f.Name())
 			logging.RegisterSink(f)
