@@ -244,7 +244,7 @@ var LookupFunc = function.New(&function.Spec{
 		AllowMarked:      true,
 	},
 	Type: func(args []cty.Value) (ret cty.Type, err error) {
-		if len(args) < 1 || len(args) > 3 {
+		if len(args) < 2 || len(args) > 3 {
 			return cty.NilType, fmt.Errorf("lookup() takes two or three arguments, got %d", len(args))
 		}
 
