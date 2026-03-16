@@ -83,9 +83,9 @@ func (me *LogRoundTripper) log(in []byte, out []byte, err error, start time.Time
 		tag = "[CRITICAL]"
 	}
 	buf.WriteString(tag)
+	// Do not log raw request headers/body (`in`) to avoid leaking sensitive information.
 	if len(in) > 0 {
-		buf.WriteString("tencentcloud-sdk-go: ")
-		buf.Write(in)
+		buf.WriteString("tencentcloud-sdk-go: [request redacted]")
 	}
 	if len(out) > 0 {
 		buf.WriteString("; response:")
