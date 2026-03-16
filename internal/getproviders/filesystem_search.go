@@ -22,6 +22,7 @@ import (
 // This is separated to allow other callers, such as the provider plugin cache
 // management in the "internal/providercache" package, to use the same
 // directory structure conventions.
+const minPathSegments = 4
 func SearchLocalDirectory(baseDir string) (map[addrs.Provider]PackageMetaList, error) {
 	ret := make(map[addrs.Provider]PackageMetaList)
 
@@ -66,7 +67,7 @@ func SearchLocalDirectory(baseDir string) (map[addrs.Provider]PackageMetaList, e
 		relPath := filepath.ToSlash(fsPath)
 		parts := strings.Split(relPath, "/")
 
-		if len(parts) < 3 {
+		if len(parts) < minPathSegments {
 			// Likely a prefix of a valid path, so we'll ignore it and visit
 			// the full valid path on a later call.
 
