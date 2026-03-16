@@ -254,7 +254,7 @@ func (h *jsonHook) PostListQuery(id terraform.HookResourceIdentity, results plan
 		_, value := iter.Element()
 
 		var generated *genconfig.ResourceImport
-		if len(results.Generated.Imports) > 0 {
+		if idx < len(results.Generated.Imports) {
 			generated = &results.Generated.Imports[idx]
 		}
 
