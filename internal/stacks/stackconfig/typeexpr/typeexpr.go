@@ -123,6 +123,10 @@ func getType(expr hcl.Expression, typeInfo TypeInformation, constraint, withDefa
 			subjectRange = hcl.RangeBetween(call.Arguments[1].Range(), call.Arguments[len(call.Arguments)-1].Range())
 		}
 
+		if call == nil {
+			return cty.DynamicPseudoType, nil, diags
+		}
+
 		switch call.Name {
 		case "list", "set", "map":
 			return cty.DynamicPseudoType, nil, hcl.Diagnostics{{
