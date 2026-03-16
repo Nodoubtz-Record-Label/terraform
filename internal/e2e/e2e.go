@@ -234,14 +234,22 @@ func (b *binary) SetLocalState(state *states.State) error {
 	if err != nil {
 		return fmt.Errorf("failed to create temporary state file %s: %s", path, err)
 	}
-	defer f.Close()
 
 	sf := &statefile.File{
 		Serial:  0,
 		Lineage: "fake-for-testing",
 		State:   state,
 	}
-	return statefile.Write(sf, f)
+	if err := statefile.Write(sf, f); err != nil {
+		// Return the write error directly; close errors will be ignored in this case
+		// since the write failure is the primary problem.
+		_ = f.Close()
+		return err
+	}
+	if err := f.Close(); err != nil {
+		return fmt.Errorf("failed to close temporary state file %s: %s", path, err)
+	}
+	return nil
 }
 
 func GoBuild(pkgPath, tmpPrefix string) string {
