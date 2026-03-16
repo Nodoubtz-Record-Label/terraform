@@ -186,6 +186,14 @@ func (c *RemoteClient) Put(data []byte) tfdiags.Diagnostics {
 
 // chunkPayload splits the state payload into byte arrays of the given size
 func chunkPayload(buf []byte, size int) [][]byte {
+	// Guard against invalid or zero chunk size to avoid panics or undefined behavior.
+	if size <= 0 {
+		return nil
+	}
+	if len(buf) == 0 {
+		return nil
+	}
+
 	chunks := make([][]byte, 0, len(buf)/size+1)
 	for len(buf) >= size {
 		var chunk []byte
